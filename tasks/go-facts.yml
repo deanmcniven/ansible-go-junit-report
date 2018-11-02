@@ -1,0 +1,34 @@
+---
+- name: Set facts for default go paths
+  become: false
+  set_fact:
+    default_go_path: "{{ local_user_homedir }}/code/go"
+  changed_when: false
+
+- name: Set go_path fact
+  become: false
+  set_fact:
+    go_path: "{{ lookup('env','GOPATH') | default(default_go_path, true) }}"
+  changed_when: false
+
+- name: Is go on PATH
+  become: false
+  command: which go
+  register: go_path_result
+  ignore_errors: true
+  changed_when: false
+
+- name: Use PATH
+  become: false
+  set_fact:
+    go_sys_path: "{{ lookup('env','PATH') }}"
+  when: go_path_result.failed == false
+  changed_when: false
+
+- name: Set PATH
+  become: false
+  set_fact:
+    go_sys_path: "/usr/local/go/bin:{{ lookup('env','PATH') }}"
+  when: go_path_result.failed == true
+  changed_when: false
+
