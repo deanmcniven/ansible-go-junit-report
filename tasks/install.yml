@@ -1,7 +1,7 @@
 ---
 - name: Install go-junit-report
   become: false
-  command: go install github.com/jstemmer/go-junit-report
+  command: go install github.com/jstemmer/go-junit-report@latest
   environment:
     GOPATH: "{{ go_path }}"
     PATH: "{{ go_sys_path }}"
